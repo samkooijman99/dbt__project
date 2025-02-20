@@ -6,9 +6,9 @@ Current tools:
 - metabase
 - postgres
 - using yfinance api to retrieve stock data
+- github actions by checking sqlfluff
 
 Tools / features to come:
-- cicd with github actions
 - terraform
 - aws ec2 for hosting metabase possibly
 - sandbox / production env
