@@ -14,8 +14,16 @@ Tools / features to come:
 - sandbox / production env
 - airbyte
 
+Getting Started: 
+
+Insert your DeGiro transactions csv in your `/seeds` folder.
+
+Starting up your virtual env: `source env/bin/activate`
+
+Building the docker image: `docker-compose build --no-cache`
+
 How to fire up the docker containers: `docker compose up`
 
-How to start a virtual env: `source env/bin/activate`
+After, Metabase is available at `http://localhost:3000`
 
-How to start up the proper postgres db: `psql -h localhost -p 5433 -U postgres -d destination_db`
+The postgres db is queryable after accessing your destination_db: `psql -h localhost -p 5433 -U postgres -d destination_db`
