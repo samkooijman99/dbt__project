@@ -1,0 +1,12 @@
+stocks:
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: secret
+      port: 5433
+      dbname: destination_db
+      schema: default_schema
+      threads: 1
+  target: dev

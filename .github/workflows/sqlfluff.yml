@@ -1,0 +1,30 @@
+name: SQLFluff Linting
+
+on:
+  pull_request:
+    paths:
+      - '**.sql'
+      - '.github/workflows/sqlfluff.yml'
+
+jobs:
+  lint:
+    name: SQLFluff Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          
+      - name: Install SQLFluff and DBT templater
+        run: |
+          python -m pip install --upgrade pip
+          pip install sqlfluff sqlfluff-templater-dbt dbt-postgres
+
+      - name: Run SQLFluff
+        run: |
+          find . -name "*.sql" -type f -exec sqlfluff lint {} --dialect postgres --templater dbt \;
