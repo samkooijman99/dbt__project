@@ -76,6 +76,7 @@ def create_schema_and_table(conn, cur, schema_name, table_name, table_query):
         print(f"Error creating schema and table: {str(e)}")
         raise
 
+
 def write_data_to_db(df, conn, cur, schema_name, table_name):
     try:
         print("Preparing data for database insertion...")
@@ -133,33 +134,18 @@ def main():
         date_df = get_dates(START_DATE, END_DATE)
         exchange_df = get_exchange_rates(START_DATE, END_DATE)
         print("\n--- Stock data retrieval completed ---")
-        
-        if stock_df is not None:
-            print(f"Successfully retrieved stock data with shape: {stock_df.shape}")
-            print("Sample of data columns:", stock_df.columns.tolist())
-            
-            schema_name = 'yfinance_data'
-            table_name = 'stock_data_hist'
-            create_schema_and_table(dest_conn, dest_cur, schema_name, table_name, stock_query)
-            write_data_to_db(stock_df, dest_conn, dest_cur, schema_name, table_name)
 
-        if date_df is not None:
-            print(f"Successfully retrieved stock data with shape: {date_df.shape}")
-            print("Sample of data columns:", date_df.columns.tolist())
-            
-            schema_name = 'general_dimensions'
-            table_name = 'dim_date'
-            create_schema_and_table(dest_conn, dest_cur, schema_name, table_name, date_query)
-            write_data_to_db(date_df, dest_conn, dest_cur, schema_name, table_name)
+        def create_and_write_to_db(df, schema_name, table_name, query):
+            if df is not None:
+                print(f"Successfully retrieved data with shape: {df.shape}")
+                print("Sample of data columns:", df.columns.tolist())
                 
-        if exchange_df is not None:
-            print(f"Successfully retrieved stock data with shape: {exchange_df.shape}")
-            print("Sample of data columns:", exchange_df.columns.tolist())
-            
-            schema_name = 'general_dimensions'
-            table_name = 'exchange_rates'
-            create_schema_and_table(dest_conn, dest_cur, schema_name, table_name, exchange_rate_query)
-            write_data_to_db(exchange_df, dest_conn, dest_cur, schema_name, table_name)
+                create_schema_and_table(dest_conn, dest_cur, schema_name, table_name, query)
+                write_data_to_db(df, dest_conn, dest_cur, schema_name, table_name)
+        
+        create_and_write_to_db(stock_df, 'yfinance_data', 'stock_data_hist', stock_query)
+        create_and_write_to_db(date_df, 'general_dimensions', 'dim_date', date_query)
+        create_and_write_to_db(exchange_df, 'general_dimensions', 'exchange_rates', exchange_rate_query)
         
         print("Closing database connections...")
         dest_cur.close()
